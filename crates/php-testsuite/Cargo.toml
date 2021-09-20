@@ -1,0 +1,14 @@
+[package]
+name = "php-testsuite"
+description = "PHP-based tests for ext-php-rs"
+publish = false
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "extphprs_testsuite"
+crate-type = ["cdylib"]
+
+[dependencies]
+ext-php-rs = { path = "../../", features = ["closure"] }

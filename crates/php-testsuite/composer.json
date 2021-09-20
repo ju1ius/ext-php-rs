@@ -1,0 +1,24 @@
+{
+  "name": "ext-php-rs/php-testsuite",
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "ExtPhpRs\\PhpTests\\": "php/src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ExtPhpRs\\Tests\\": "php/tests/"
+    }
+  },
+  "config": {
+    "vendor-dir": "php/vendor"
+  },
+  "require": {
+    "php": ">=8.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
+}

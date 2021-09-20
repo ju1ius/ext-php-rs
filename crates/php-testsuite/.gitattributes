@@ -1,0 +1,3 @@
+/php/run-tests.php binary
+
+*.php diff=php

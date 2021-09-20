@@ -1,0 +1,3 @@
+.phpunit.cache
+/php/vendor
+*.stubs.php
