@@ -1,0 +1,40 @@
+name: Setup LLVM & Clang
+description: Specific steps to install and configure LLVM and Clang
+inputs:
+  version:
+    description: LLVM version to install
+    required: true
+    default: "14"
+  os:
+    description: Target OS
+    required: true
+    default: "ubuntu-latest"
+runs:
+  using: "composite"
+  steps:
+    - name: Cache LLVM and Clang
+      id: cache-llvm
+      uses: actions/cache@v3
+      if: runner.os != 'Windows'
+      with:
+        path: ${{ runner.temp }}/llvm-${{ inputs.version }}
+        key: ${{ inputs.os }}-llvm-${{ inputs.version }}
+    - name: Setup LLVM & Clang
+      id: llvm
+      uses: KyleMayes/install-llvm-action@v1
+      if: runner.os != 'Windows'
+      with:
+        version: ${{ inputs.version }}
+        directory: ${{ runner.temp }}/llvm-${{ inputs.version }}
+        cached: ${{ steps.cache-llvm.outputs.cache-hit }}
+    - name: Configure Clang
+      shell: bash
+      if: runner.os != 'Windows'
+      run: |
+        echo "LIBCLANG_PATH=${{ runner.temp }}/llvm-${{ inputs.version }}/lib" >> $GITHUB_ENV
+        echo "LLVM_VERSION=${{ steps.llvm.outputs.version }}" >> $GITHUB_ENV
+        echo "LLVM_CONFIG_PATH=${{ runner.temp }}/llvm-${{ inputs.version }}/bin/llvm-config" >> $GITHUB_ENV
+    - name: Configure Clang (macOS only)
+      shell: bash
+      if: runner.os == 'macOS'
+      run: echo "SDKROOT=$(xcrun --show-sdk-path)" >> $GITHUB_ENV

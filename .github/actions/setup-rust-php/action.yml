@@ -1,0 +1,44 @@
+name: Setup Rust, LLVM & PHP
+description: Specific steps to install and configure Rust, LLVM and PHP
+
+inputs:
+  os:
+    description: The runner os
+    required: true
+  llvm_version:
+    description: LLVM version
+    required: true
+    default: "14"
+  rust_toolchain:
+    description: Rust toolchain to install (stable, nightly)
+    required: true
+    default: stable
+  rust_components:
+    description: The toolchain components to install (i.e. rustfmt, clippy)
+  php_version:
+    description: PHP version to install
+    required: true
+  php_tools:
+    description: PHP tools to install
+  php_thread_safety:
+    description: PHP thread safety mode (ts or nts)
+    required: true
+    default: nts
+
+runs:
+  using: composite
+  steps:
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ inputs.php_version }}
+        tools: ${{ inputs.php_tools }}
+      env:
+        phpts: ${{ inputs.php_thread_safety }}
+    - name: Setup Rust & LLVM
+      uses: ./.github/actions/setup-rust
+      with:
+        os: ${{ inputs.os }}
+        llvm_version: ${{ inputs.llvm_version }}
+        toolchain: ${{ inputs.rust_toolchain }}
+        components: ${{ inputs.rust_components }}

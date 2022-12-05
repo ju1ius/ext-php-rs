@@ -1,0 +1,39 @@
+name: Setup Rust toolchain w/ caching
+description: Specific steps to install and configure Rust, LLVM and PHP
+
+inputs:
+  os:
+    description: The runner os
+    required: true
+  llvm_version:
+    description: LLVM version
+    required: true
+    default: "14"
+  toolchain:
+    description: Rust toolchain to install (stable, nightly)
+    required: true
+    default: stable
+  components:
+    description: The toolchain components to install (i.e. rustfmt, clippy)
+
+runs:
+  using: composite
+  steps:
+    - name: Setup LLVM
+      uses: ./.github/actions/setup-llvm
+      with:
+        os: ${{ inputs.os }}
+        version: ${{ inputs.llvm_version }}
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ inputs.toolchain }}
+        components: ${{ inputs.components }}
+    - name: Cache cargo dependencies
+      uses: Swatinem/rust-cache@v2
+      # Uncomment the following if statement if caching nightly deps
+      # ends up causing too much cache invalidation.
+      # if: inputs.rust_toolchain == 'stable'
+      with:
+        # increment this manually to force cache eviction
+        prefix-key: "v0-rust"

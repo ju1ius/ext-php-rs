@@ -1,0 +1,17 @@
+# https://docs.codecov.com/docs/codecovyml-reference
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        paths:
+          - src
+          - crates/macros
+      cli:
+        paths:
+          - crates/cli
+
+    patch:
+      default:
+        target: 100%

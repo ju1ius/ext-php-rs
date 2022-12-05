@@ -25,20 +25,12 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+      - uses: ./.github/actions/setup-llvm
+        with:
+          os: ${{ matrix.os }}
+          version: ${{ matrix.clang }}
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@nightly
-      - name: Cache LLVM and Clang
-        id: cache-llvm
-        uses: actions/cache@v3
-        with:
-          path: ${{ runner.temp }}/llvm-${{ matrix.clang }}
-          key: ${{ matrix.os }}-llvm-${{ matrix.clang }}
-      - name: Setup LLVM & Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: ${{ matrix.clang }}
-          directory: ${{ runner.temp }}/llvm-${{ matrix.clang }}
-          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
       - name: Install mdbook
         uses: peaceiris/actions-mdbook@v1
         with:
